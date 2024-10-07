@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="BalticSea">#FF272b30</color>
+    <color name="Tuna">#FF32383e</color>
+    <color name="DarkSkyBlue">#FF4799eb</color>
+    <color name="RoyalOrange">#FFeb9947</color>
+    <color name="TigersEye">#FFe38b42</color>
+    <color name="DarkGrayX11">#FFaaaaaa</color>
 </resources>

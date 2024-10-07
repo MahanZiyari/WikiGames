@@ -2,7 +2,11 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.WikiGames" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/DarkSkyBlue</item>
+        <item name="colorSecondary">@color/RoyalOrange</item>
+        <item name="android:colorBackground">@color/BalticSea</item>
+        <item name="colorSurface">@color/Tuna</item>
+        <item name="colorOnBackground">@color/DarkGrayX11</item>
     </style>
 
     <style name="Theme.WikiGames" parent="Base.Theme.WikiGames" />
