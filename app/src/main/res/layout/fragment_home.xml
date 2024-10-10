@@ -4,17 +4,98 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="18dp"
+    android:padding="10dp"
     tools:context=".ui.home.HomeFragment">
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@drawable/round_home_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/RoyalOrange" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/carousel_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="12dp"
+                android:text="Latest Games"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/banners"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.singh.daman.proprogressviews.CircleArcProgress
+                android:id="@+id/carousel_progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:circle_size="50dp"
+                app:color_circle="@android:color/holo_red_dark"
+                app:arc_radius="50dp"
+                app:layout_constraintTop_toBottomOf="@id/carousel_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:arc_color="@android:color/holo_red_dark"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/banners"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="2dp"
+                android:clipToPadding="true"
+                app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/carousel_title" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/best_rated_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="12dp"
+                android:text="Best Rated Games"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/banners"
+                app:layout_constraintTop_toBottomOf="@id/banners" />
+
+
+            <com.singh.daman.proprogressviews.CircleArcProgress
+                android:id="@+id/best_games_progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:circle_size="50dp"
+                app:color_circle="@android:color/holo_red_dark"
+                app:arc_radius="50dp"
+                app:layout_constraintTop_toBottomOf="@id/best_rated_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:arc_color="@android:color/holo_red_dark"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/best_rated_games_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="2dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/best_rated_title"
+                tools:listitem="@layout/item_games_small" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

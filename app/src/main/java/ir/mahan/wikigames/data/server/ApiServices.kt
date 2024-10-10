@@ -45,7 +45,7 @@ interface ApiServices {
     @GET("games")
     fun callForBestRatedGames(
         @Query("key") apiKey: String,
-        @Query("metacritic") metacritic: String,
+        @Query("oredring") ordering: String = "-metacritic",
         @Query("page") page: Int = 1
     ): Single<Response<ResponseGamesList>>
 
