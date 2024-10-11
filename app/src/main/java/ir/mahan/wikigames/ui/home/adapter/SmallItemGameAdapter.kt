@@ -7,22 +7,24 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ir.mahan.wikigames.data.model.ResponseGamesList
-import ir.mahan.wikigames.databinding.ListBannerBinding
+import ir.mahan.wikigames.databinding.ItemGamesSmallBinding
 import javax.inject.Inject
 
-class ImageAdapter @Inject constructor(): RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
+class SmallItemGameAdapter @Inject constructor() :
+    RecyclerView.Adapter<SmallItemGameAdapter.ViewHolder>() {
 
-    private lateinit var binding: ListBannerBinding
+    private lateinit var binding: ItemGamesSmallBinding
     private var games = emptyList<ResponseGamesList.Result>()
     private lateinit var context: Context
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        binding = ListBannerBinding.inflate(LayoutInflater.from(context), parent, false)
+        binding = ItemGamesSmallBinding.inflate(LayoutInflater.from(context), parent, false)
         return ViewHolder()
     }
 
-    override fun onBindViewHolder(holder: ImageAdapter.ViewHolder, position: Int) {
+
+    override fun onBindViewHolder(holder: SmallItemGameAdapter.ViewHolder, position: Int) {
         //getItem from PagingDataAdapter
         holder.bind(games[position])
         //Not duplicate items
@@ -31,11 +33,14 @@ class ImageAdapter @Inject constructor(): RecyclerView.Adapter<ImageAdapter.View
 
     override fun getItemCount(): Int = games.size
 
-    inner class ViewHolder: RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseGamesList.Result) {
             binding.apply {
-                listItemImage.load(item.backgroundImage)
+                item.backgroundImage?.let {
+                    gameCover.load(it)
+                }
                 gameTitle.text = item.name
+                gameGenre.text = item.genres.first().name
             }
         }
     }
@@ -47,7 +52,10 @@ class ImageAdapter @Inject constructor(): RecyclerView.Adapter<ImageAdapter.View
         diffUtils.dispatchUpdatesTo(this)
     }
 
-    class MoviesDiffUtils(private val oldItem: List<ResponseGamesList.Result>, private val newItem: List<ResponseGamesList.Result>) : DiffUtil.Callback() {
+    class MoviesDiffUtils(
+        private val oldItem: List<ResponseGamesList.Result>,
+        private val newItem: List<ResponseGamesList.Result>
+    ) : DiffUtil.Callback() {
         override fun getOldListSize(): Int {
             return oldItem.size
         }

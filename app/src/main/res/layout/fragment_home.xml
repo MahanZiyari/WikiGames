@@ -32,18 +32,15 @@
                 app:layout_constraintStart_toStartOf="@id/banners"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.singh.daman.proprogressviews.CircleArcProgress
+            <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/carousel_progressbar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:circle_size="50dp"
-                app:color_circle="@android:color/holo_red_dark"
-                app:arc_radius="50dp"
-                app:layout_constraintTop_toBottomOf="@id/carousel_title"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toBottomOf="@+id/banners"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:arc_color="@android:color/holo_red_dark"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/banners" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/banners"
@@ -68,29 +65,52 @@
                 app:layout_constraintStart_toStartOf="@id/banners"
                 app:layout_constraintTop_toBottomOf="@id/banners" />
 
-
-            <com.singh.daman.proprogressviews.CircleArcProgress
+            <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/best_games_progressbar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:circle_size="50dp"
-                app:color_circle="@android:color/holo_red_dark"
-                app:arc_radius="50dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/best_rated_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:arc_color="@android:color/holo_red_dark"
-                />
+                app:layout_constraintBottom_toBottomOf="@id/best_rated_games_recycler" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/best_rated_games_recycler"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:clipToPadding="false"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="2dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/best_rated_title"
+                tools:listitem="@layout/item_games_small" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/best_shooting_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="12dp"
+                android:text="Best Of Shooters"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/best_rated_title"
+                app:layout_constraintTop_toBottomOf="@id/best_rated_games_recycler" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/best_shooting_recycler"
+                android:layout_width="0dp"
+                android:clipToPadding="false"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="2dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/best_shooting_title"
                 tools:listitem="@layout/item_games_small" />
 
 

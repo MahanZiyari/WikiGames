@@ -1,4 +1,4 @@
-package ir.mahan.wikigames.utils.dependencyInjection
+package ir.mahan.wikigames.utils.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

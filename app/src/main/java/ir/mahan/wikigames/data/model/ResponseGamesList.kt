@@ -68,7 +68,7 @@ data class ResponseGamesList(
         @SerializedName("added_by_status")
         val addedByStatus: AddedByStatus,
         @SerializedName("background_image")
-        val backgroundImage: String,
+        val backgroundImage: String?,
         @SerializedName("clip")
         val clip: Any?,
         @SerializedName("dominant_color")

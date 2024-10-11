@@ -5,29 +5,32 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.carousel.CarouselLayoutManager
+import com.google.android.material.carousel.CarouselSnapHelper
+import com.google.android.material.carousel.HeroCarouselStrategy
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import ir.mahan.wikigames.R
+import ir.mahan.wikigames.data.model.ResponseGamesList
 import ir.mahan.wikigames.databinding.FragmentHomeBinding
 import ir.mahan.wikigames.ui.home.adapter.ImageAdapter
+import ir.mahan.wikigames.ui.home.adapter.SmallItemGameAdapter
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), HomeContracts.View {
 
     // Binding Object
     private lateinit var binding: FragmentHomeBinding
 
     @Inject lateinit var bannerAdapter: ImageAdapter
+    @Inject lateinit var bestGamesAdapter: SmallItemGameAdapter
+    @Inject lateinit var bestShooterAdapter: SmallItemGameAdapter
+    @Inject lateinit var presenter: HomePresenter
 
 
-    val testImages = arrayListOf(
-        "https://media.rawg.io/media/games/b7b/b7b8381707152afc7d91f5d95de70e39.jpg",
-        "https://media.rawg.io/media/games/0be/0bea0a08a4d954337305391b778a7f37.jpg",
-        "https://media.rawg.io/media/games/b6b/b6b20bfc4b34e312dbc8aac53c95a348.jpg",
-        "https://media.rawg.io/media/games/530/5302dd22a190e664531236ca724e8726.jpg"
-    )
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,13 +42,54 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Call APIs
+        presenter.getLatestGames()
+        presenter.getBestGamesByMetacritic()
+        presenter.getBestOfShooter()
         // Handling UI
         binding.apply {
-            banners.apply {
-                bannerAdapter.setData(testImages)
-                adapter = bannerAdapter
-            }
+
         }
+    }
+
+    override fun showLatestGamesOnCarousel(games: List<ResponseGamesList.Result>) {
+        binding.banners.apply {
+            val snapHelper = CarouselSnapHelper()
+            snapHelper.attachToRecyclerView(this)
+            bannerAdapter.setData(games)
+            layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
+            adapter = bannerAdapter
+        }
+    }
+
+    override fun setCarouselLoadingState(isShown: Boolean) {
+        if (isShown) {
+            binding.banners.visibility = View.GONE
+            binding.carouselProgressbar.visibility = View.VISIBLE
+        } else {
+            binding.banners.visibility = View.VISIBLE
+            binding.carouselProgressbar.visibility = View.GONE
+        }
+    }
+
+    override fun showBestGamesByMetacritic(games: List<ResponseGamesList.Result>) {
+        binding.bestRatedGamesRecycler.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            bestGamesAdapter.setData(games)
+            adapter = bestGamesAdapter
+        }
+    }
+
+    override fun showBestGamesShooter(games: List<ResponseGamesList.Result>) {
+        binding.bestShootingRecycler.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            bestShooterAdapter.setData(games)
+            adapter = bestShooterAdapter
+        }
+    }
+
+    override fun showGeneralError(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
 
 }

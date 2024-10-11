@@ -86,7 +86,10 @@ dependencies {
     implementation("io.coil-kt:coil:2.6.0")
     // RxNetwork
     implementation("com.laimiux.rxnetwork:rxnetwork:0.0.4")
+    // Joda Time
+    implementation("net.danlew:android.joda:2.13.0")
+    // Timber
+    implementation("com.jakewharton.timber:timber:5.0.1")
 
     implementation("com.google.android.material:material:1.12.0")
-    implementation("com.github.DamanSingh4321:ProProgressViews:v1.1")
 }

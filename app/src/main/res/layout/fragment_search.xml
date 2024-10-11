@@ -3,9 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/DarkGrayX11"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.search.SearchFragment">
 
 
+    <EditText
+        android:id="@+id/search_edt"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_rounded"
+        android:drawableStart="@drawable/round_search_24"
+        android:drawablePadding="5dp"
+        android:drawableTint="?attr/colorOnBackground"
+        android:hint="What is in your mind?"
+        android:inputType="text"
+        android:paddingStart="15dp"
+        android:textColor="?attr/colorOnBackground"
+        android:textColorHint="@color/SmokeWhite"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="RtlSymmetry" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
