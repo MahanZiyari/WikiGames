@@ -3,8 +3,8 @@ package ir.mahan.wikigames.ui.home
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ir.mahan.wikigames.base.BasePresenterImpl
-import ir.mahan.wikigames.data.repository.HomeRepository
 import ir.mahan.wikigames.data.model.ResponseGamesList
+import ir.mahan.wikigames.data.repository.HomeRepository
 import org.joda.time.LocalDate
 import timber.log.Timber
 import javax.inject.Inject
@@ -14,19 +14,17 @@ class HomePresenter @Inject constructor(
     private val view: HomeContracts.View
 ) : HomeContracts.Presenter, BasePresenterImpl() {
 
+    private val apiResult: MutableMap<Int, List<ResponseGamesList.Result>> = mutableMapOf()
+
     override fun getLatestGames() {
-        //TODO: Show Loading
-        view.setCarouselLoadingState(true)
+        view.setLoadingState(true)
         disposable = repository
             .getLatestGames(date = LocalDate.now().toString(), ordering = "released")
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 it.body()?.let {
-                    // 1- Getting 10 Games with background
-                    // 2- call view for showing in carousel
-                    //TODO: Hide Loading
-                    view.setCarouselLoadingState(false)
+                    view.setLoadingState(false)
                     view.showLatestGamesOnCarousel(filterGamesByBackGround(it.results))
                 }
             }, {
@@ -65,6 +63,30 @@ class HomePresenter @Inject constructor(
             }, {
                 view.showGeneralError(it.message.toString())
             })
+    }
+
+    override fun getAllData() {
+        view.setLoadingState(true)
+        disposable =
+            repository.getLatestGames(date = LocalDate.now().toString(), ordering = "released")
+                .subscribeOn(Schedulers.io())
+                .flatMap {
+                    it.body()?.let { apiResult.put(1, it.results) }
+                    repository.getBestGamesByMetacritic()
+                }.flatMap {
+                    it.body()?.let { apiResult.put(2, it.results) }
+                    repository.getBestOfSpecificGenre("2", "-metacritic")
+                }.map { it }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ body ->
+                    body.body()?.let { bestShooters ->
+                        apiResult.put(3, bestShooters.results)
+                        view.setLoadingState(false)
+                        view.showAllData(apiResult)
+                    }
+                }, {
+                    view.showGeneralError(it.message.toString())
+                })
     }
 
     private fun filterGamesByBackGround(list: List<ResponseGamesList.Result>): List<ResponseGamesList.Result> {

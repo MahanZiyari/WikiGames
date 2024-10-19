@@ -43,13 +43,39 @@ class HomeFragment : Fragment(), HomeContracts.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Call APIs
-        presenter.getLatestGames()
+        /*presenter.getLatestGames()
         presenter.getBestGamesByMetacritic()
-        presenter.getBestOfShooter()
+        presenter.getBestOfShooter()*/
+        presenter.getAllData()
         // Handling UI
         binding.apply {
-
+            // Carousel Config
+            banners.apply {
+                val snapHelper = CarouselSnapHelper()
+                if (onFlingListener == null)
+                    snapHelper.attachToRecyclerView(this)
+                layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
+                adapter = bannerAdapter
+            }
+            // Best Scores Config
+            binding.bestRatedGamesRecycler.apply {
+                layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = bestGamesAdapter
+            }
+            // Best of A Genres
+            binding.bestShootingRecycler.apply {
+                layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = bestShooterAdapter
+            }
         }
+    }
+
+    override fun showAllData(data: Map<Int, List<ResponseGamesList.Result>>) {
+        bannerAdapter.setData(data.get(1)!!)
+        bestGamesAdapter.setData(data.get(2)!!)
+        bestShooterAdapter.setData(data.get(3)!!)
     }
 
     override fun showLatestGamesOnCarousel(games: List<ResponseGamesList.Result>) {
@@ -63,13 +89,13 @@ class HomeFragment : Fragment(), HomeContracts.View {
         }
     }
 
-    override fun setCarouselLoadingState(isShown: Boolean) {
+    override fun setLoadingState(isShown: Boolean) {
         if (isShown) {
-            binding.banners.visibility = View.GONE
-            binding.carouselProgressbar.visibility = View.VISIBLE
+            binding.contentLayout.visibility = View.GONE
+            binding.loadingProgress.visibility = View.VISIBLE
         } else {
-            binding.banners.visibility = View.VISIBLE
-            binding.carouselProgressbar.visibility = View.GONE
+            binding.contentLayout.visibility = View.VISIBLE
+            binding.loadingProgress.visibility = View.GONE
         }
     }
 

@@ -7,8 +7,9 @@ import ir.mahan.wikigames.data.model.ResponseGamesList
 interface HomeContracts {
 
     interface View: BaseView {
+        fun showAllData(data: Map<Int, List<ResponseGamesList.Result>>)
         fun showLatestGamesOnCarousel(games: List<ResponseGamesList.Result>)
-        fun setCarouselLoadingState(isShown: Boolean)
+        fun setLoadingState(isShown: Boolean)
         fun showBestGamesByMetacritic(games: List<ResponseGamesList.Result>)
         fun showBestGamesShooter(games: List<ResponseGamesList.Result>)
     }
@@ -17,5 +18,6 @@ interface HomeContracts {
         fun getLatestGames()
         fun getBestGamesByMetacritic()
         fun getBestOfShooter()
+        fun getAllData()
     }
 }

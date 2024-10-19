@@ -9,7 +9,9 @@
     tools:context=".ui.home.HomeFragment">
 
 
+    <!--Loaded result-->
     <ScrollView
+        android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -32,14 +34,6 @@
                 app:layout_constraintStart_toStartOf="@id/banners"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/carousel_progressbar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:layout_constraintBottom_toBottomOf="@+id/banners"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/banners" />
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -98,7 +92,7 @@
                 android:textColor="?attr/colorOnBackground"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/best_rated_title"
+                app:layout_constraintStart_toStartOf="@id/banners"
                 app:layout_constraintTop_toBottomOf="@id/best_rated_games_recycler" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -116,6 +110,18 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/loading_progress"
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
