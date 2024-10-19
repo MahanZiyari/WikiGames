@@ -11,6 +11,11 @@
         <item name="colorOnBackground">@color/DarkGrayX11</item>
     </style>
 
+    <style name="RoundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10dp</item>
+    </style>
+
 
     <style name="Theme.WikiGames" parent="Base.Theme.WikiGames" />
 </resources>

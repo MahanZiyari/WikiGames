@@ -1,4 +1,4 @@
-package ir.mahan.wikigames.ui.home.adapter
+package ir.mahan.wikigames.ui.search
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,24 +7,26 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ir.mahan.wikigames.data.model.ResponseGamesList
+import ir.mahan.wikigames.data.model.ResponseStores
 import ir.mahan.wikigames.databinding.ItemGamesSmallBinding
+import ir.mahan.wikigames.databinding.ItemImageBgBinding
+import ir.mahan.wikigames.ui.home.adapter.SmallItemGameAdapter
 import javax.inject.Inject
 
-class SmallItemGameAdapter @Inject constructor() :
-    RecyclerView.Adapter<SmallItemGameAdapter.ViewHolder>() {
+class ImageAdapter @Inject constructor(): RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
-    private lateinit var binding: ItemGamesSmallBinding
-    private var games = emptyList<ResponseGamesList.Result>()
+    private lateinit var binding: ItemImageBgBinding
+    private var games = emptyList<ResponseStores.Result>()
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        binding = ItemGamesSmallBinding.inflate(LayoutInflater.from(context), parent, false)
+        binding = ItemImageBgBinding.inflate(LayoutInflater.from(context), parent, false)
         return ViewHolder()
     }
 
 
-    override fun onBindViewHolder(holder: SmallItemGameAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ImageAdapter.ViewHolder, position: Int) {
         //getItem from PagingDataAdapter
         holder.bind(games[position])
         //Not duplicate items
@@ -34,24 +36,21 @@ class SmallItemGameAdapter @Inject constructor() :
     override fun getItemCount(): Int = games.size
 
     inner class ViewHolder : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ResponseGamesList.Result) {
+        fun bind(item: ResponseStores.Result) {
             binding.apply {
-                item.backgroundImage?.let {
-                    gameCover.load(it)
-                }
-                gameTitle.text = item.name
-                gameGenre.text = item.genres.first().name
+                cover.load(item.imageBackground)
+                title.text = item.name
             }
         }
     }
 
-    private var onItemClickListener: ((ResponseGamesList.Result) -> Unit)? = null
+    private var onItemClickListener: ((ResponseStores.Result) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (ResponseGamesList.Result) -> Unit) {
+    fun setOnItemClickListener(listener: (ResponseStores.Result) -> Unit) {
         onItemClickListener = listener
     }
 
-    fun setData(data: List<ResponseGamesList.Result>) {
+    fun setData(data: List<ResponseStores.Result>) {
         val moviesDiffUtil = MoviesDiffUtils(games, data)
         val diffUtils = DiffUtil.calculateDiff(moviesDiffUtil)
         games = data
@@ -59,8 +58,8 @@ class SmallItemGameAdapter @Inject constructor() :
     }
 
     class MoviesDiffUtils(
-        private val oldItem: List<ResponseGamesList.Result>,
-        private val newItem: List<ResponseGamesList.Result>
+        private val oldItem: List<ResponseStores.Result>,
+        private val newItem: List<ResponseStores.Result>
     ) : DiffUtil.Callback() {
         override fun getOldListSize(): Int {
             return oldItem.size

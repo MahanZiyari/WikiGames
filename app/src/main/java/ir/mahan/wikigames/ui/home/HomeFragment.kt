@@ -1,10 +1,10 @@
 package ir.mahan.wikigames.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
@@ -13,7 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ir.mahan.wikigames.data.model.ResponseGamesList
 import ir.mahan.wikigames.databinding.FragmentHomeBinding
-import ir.mahan.wikigames.ui.home.adapter.ImageAdapter
+import ir.mahan.wikigames.ui.home.adapter.CarouselAdapter
 import ir.mahan.wikigames.ui.home.adapter.SmallItemGameAdapter
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class HomeFragment : Fragment(), HomeContracts.View {
     // Binding Object
     private lateinit var binding: FragmentHomeBinding
 
-    @Inject lateinit var bannerAdapter: ImageAdapter
+    @Inject lateinit var bannerAdapter: CarouselAdapter
     @Inject lateinit var bestGamesAdapter: SmallItemGameAdapter
     @Inject lateinit var bestShooterAdapter: SmallItemGameAdapter
     @Inject lateinit var presenter: HomePresenter
@@ -55,7 +55,8 @@ class HomeFragment : Fragment(), HomeContracts.View {
     override fun showLatestGamesOnCarousel(games: List<ResponseGamesList.Result>) {
         binding.banners.apply {
             val snapHelper = CarouselSnapHelper()
-            snapHelper.attachToRecyclerView(this)
+            if (onFlingListener == null)
+                snapHelper.attachToRecyclerView(this)
             bannerAdapter.setData(games)
             layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
             adapter = bannerAdapter

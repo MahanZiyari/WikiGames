@@ -1,4 +1,4 @@
-package ir.mahan.wikigames.data
+package ir.mahan.wikigames.data.repository
 
 import ir.mahan.wikigames.data.server.ApiServices
 import javax.inject.Inject

@@ -3,7 +3,7 @@ package ir.mahan.wikigames.ui.home
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ir.mahan.wikigames.base.BasePresenterImpl
-import ir.mahan.wikigames.data.HomeRepository
+import ir.mahan.wikigames.data.repository.HomeRepository
 import ir.mahan.wikigames.data.model.ResponseGamesList
 import org.joda.time.LocalDate
 import timber.log.Timber

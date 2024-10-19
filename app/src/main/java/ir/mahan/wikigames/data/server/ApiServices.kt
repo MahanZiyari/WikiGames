@@ -2,6 +2,7 @@ package ir.mahan.wikigames.data.server
 
 import io.reactivex.rxjava3.core.Single
 import ir.mahan.wikigames.data.model.ResponseGamesList
+import ir.mahan.wikigames.data.model.ResponseStores
 import ir.mahan.wikigames.utils.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
@@ -11,13 +12,13 @@ interface ApiServices {
 
     @GET("games")
     fun callGamesList(
-        @Query("key") apiKey: String,
+        @Query("key") apiKey: String = API_KEY,
         @Query("page") page: Int = 1
     ): Single<Response<ResponseGamesList>>
 
     @GET("games")
     fun callSearchGames(
-        @Query("key") apiKey: String,
+        @Query("key") apiKey: String = API_KEY,
         @Query("search") searchQuery: String,
         @Query("page") page: Int = 1
     ): Single<Response<ResponseGamesList>>
@@ -32,7 +33,7 @@ interface ApiServices {
 
     @GET("games")
     fun callForGamesByPlatform(
-        @Query("key") apiKey: String,
+        @Query("key") apiKey: String = API_KEY,
         @Query("parent_platforms") parentPlatform: String,
         @Query("page") page: Int = 1
     ): Single<Response<ResponseGamesList>>
@@ -54,7 +55,7 @@ interface ApiServices {
 
     @GET("games")
     fun callForStoresGames(
-        @Query("key") apiKey: String,
+        @Query("key") apiKey: String = API_KEY,
         @Query("stores") store: String,
         @Query("page") page: Int = 1
     ): Single<Response<ResponseGamesList>>
@@ -62,7 +63,13 @@ interface ApiServices {
     // Genres APIs
     @GET("genres")
     fun callAllGenres(
-        @Query("key") apiKey: String
-    ): Single<Response<ResponseGamesList>>
+        @Query("key") apiKey: String = API_KEY
+    ): Single<Response<ResponseStores>>
+
+    // Stores APIs
+    @GET("stores")
+    fun callAllStores(
+        @Query("key") apiKey: String = API_KEY
+    ): Single<Response<ResponseStores>>
 
 }
