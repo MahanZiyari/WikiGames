@@ -1,11 +1,14 @@
 package ir.mahan.wikigames.data.server
 
 import io.reactivex.rxjava3.core.Single
+import ir.mahan.wikigames.data.model.ResponseGameDetails
 import ir.mahan.wikigames.data.model.ResponseGamesList
 import ir.mahan.wikigames.data.model.ResponseStores
 import ir.mahan.wikigames.utils.API_KEY
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiServices {
@@ -59,6 +62,12 @@ interface ApiServices {
         @Query("stores") store: String,
         @Query("page") page: Int = 1
     ): Single<Response<ResponseGamesList>>
+
+    @GET("games/{id}")
+    fun callForGameDetails(
+        @Path("id") id : String,
+        @Query("key") apiKey: String = API_KEY
+    ): Call<ResponseGameDetails>
 
     // Genres APIs
     @GET("genres")

@@ -10,10 +10,13 @@ interface SearchContracts {
     interface View: BaseView {
         fun showStores(stores: List<ResponseStores.Result>)
         fun showGenres(genres: List<ResponseStores.Result>)
+        fun showSearchResult(games: List<ResponseGamesList.Result>)
+        fun searchLoadingState(isShown: Boolean)
     }
 
     interface Presenter: Basepresenter {
         fun getAllStores()
         fun getAllGenres()
+        fun searchInGames(query: String)
     }
 }

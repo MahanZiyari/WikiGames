@@ -48,6 +48,13 @@ class HomeFragment : Fragment(), HomeContracts.View {
         presenter.getBestOfShooter()*/
         presenter.getAllData()
         // Handling UI
+
+    }
+
+    override fun showAllData(data: Map<Int, List<ResponseGamesList.Result>>) {
+        bannerAdapter.setData(data.get(1)!!)
+        bestGamesAdapter.setData(data.get(2)!!)
+        bestShooterAdapter.setData(data.get(3)!!)
         binding.apply {
             // Carousel Config
             banners.apply {
@@ -58,24 +65,18 @@ class HomeFragment : Fragment(), HomeContracts.View {
                 adapter = bannerAdapter
             }
             // Best Scores Config
-            binding.bestRatedGamesRecycler.apply {
+            bestRatedGamesRecycler.apply {
                 layoutManager =
                     LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = bestGamesAdapter
             }
             // Best of A Genres
-            binding.bestShootingRecycler.apply {
+            bestShootingRecycler.apply {
                 layoutManager =
                     LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = bestShooterAdapter
             }
         }
-    }
-
-    override fun showAllData(data: Map<Int, List<ResponseGamesList.Result>>) {
-        bannerAdapter.setData(data.get(1)!!)
-        bestGamesAdapter.setData(data.get(2)!!)
-        bestShooterAdapter.setData(data.get(3)!!)
     }
 
     override fun showLatestGamesOnCarousel(games: List<ResponseGamesList.Result>) {

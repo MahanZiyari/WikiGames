@@ -70,14 +70,16 @@ class HomePresenter @Inject constructor(
         disposable =
             repository.getLatestGames(date = LocalDate.now().toString(), ordering = "released")
                 .subscribeOn(Schedulers.io())
+                .cache()
                 .flatMap {
-                    it.body()?.let { apiResult.put(1, it.results) }
-                    repository.getBestGamesByMetacritic()
+                    it.body()?.let { apiResult.put(1, it.results.take(5)) }
+                    repository.getBestGamesByMetacritic().cache()
                 }.flatMap {
                     it.body()?.let { apiResult.put(2, it.results) }
-                    repository.getBestOfSpecificGenre("2", "-metacritic")
+                    repository.getBestOfSpecificGenre("2", "-metacritic").cache()
                 }.map { it }
                 .observeOn(AndroidSchedulers.mainThread())
+                .cache()
                 .subscribe({ body ->
                     body.body()?.let { bestShooters ->
                         apiResult.put(3, bestShooters.results)

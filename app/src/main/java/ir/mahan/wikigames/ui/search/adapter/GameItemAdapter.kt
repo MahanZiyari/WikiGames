@@ -1,31 +1,32 @@
-package ir.mahan.wikigames.ui.home.adapter
+package ir.mahan.wikigames.ui.search.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import ir.mahan.wikigames.data.model.ResponseGamesList
-import ir.mahan.wikigames.databinding.ItemGamesSmallBinding
+import ir.mahan.wikigames.data.model.ResponseStores
+import ir.mahan.wikigames.databinding.ItemGameBinding
+import ir.mahan.wikigames.databinding.ItemImageBgBinding
 import ir.mahan.wikigames.utils.loadByFade
 import javax.inject.Inject
 
-class SmallItemGameAdapter @Inject constructor() :
-    RecyclerView.Adapter<SmallItemGameAdapter.ViewHolder>() {
+class GameItemAdapter @Inject constructor(): RecyclerView.Adapter<GameItemAdapter.ViewHolder>() {
 
-    private lateinit var binding: ItemGamesSmallBinding
+    private lateinit var binding: ItemGameBinding
     private var games = emptyList<ResponseGamesList.Result>()
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        binding = ItemGamesSmallBinding.inflate(LayoutInflater.from(context), parent, false)
+        binding = ItemGameBinding.inflate(LayoutInflater.from(context), parent, false)
         return ViewHolder()
     }
 
 
-    override fun onBindViewHolder(holder: SmallItemGameAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: GameItemAdapter.ViewHolder, position: Int) {
         //getItem from PagingDataAdapter
         holder.bind(games[position])
         //Not duplicate items
@@ -38,10 +39,40 @@ class SmallItemGameAdapter @Inject constructor() :
         fun bind(item: ResponseGamesList.Result) {
             binding.apply {
                 item.backgroundImage?.let {
-                    gameCover.loadByFade(it)
+                    gameCover.loadByFade(item.backgroundImage)
                 }
                 gameTitle.text = item.name
+                gameSummary.text = item.description
+                setGenreAndTag(item)
+                setPlatforms(item)
+            }
+        }
+
+        private fun ItemGameBinding.setPlatforms(item: ResponseGamesList.Result) {
+            val parentPlatforms = item.parentPlatforms
+            parentPlatforms.forEach {
+                when (it.platform.id) {
+                    1 -> windowPlatform.visibility = View.VISIBLE
+                    2 -> psPlatform.visibility = View.VISIBLE
+                    3 -> xboxPlatform.visibility = View.VISIBLE
+                    4 -> applePlatform.visibility = View.VISIBLE
+                    8 -> androidPlatform.visibility = View.VISIBLE
+                    7 -> nintendoPlatform.visibility = View.VISIBLE
+                }
+            }
+        }
+
+
+        private fun ItemGameBinding.setGenreAndTag(item: ResponseGamesList.Result) {
+            if (item.genres.isNotEmpty()) {
                 gameGenre.text = item.genres.first().name
+            } else {
+                gameGenre.visibility = View.GONE
+            }
+            if (item.tags.isNotEmpty()) {
+                gameTag.text = item.tags.first().name
+            } else {
+                gameTag.visibility = View.GONE
             }
         }
     }

@@ -11,6 +11,7 @@ import ir.mahan.wikigames.data.model.ResponseStores
 import ir.mahan.wikigames.databinding.ItemGamesSmallBinding
 import ir.mahan.wikigames.databinding.ItemImageBgBinding
 import ir.mahan.wikigames.ui.home.adapter.SmallItemGameAdapter
+import ir.mahan.wikigames.utils.loadByFade
 import javax.inject.Inject
 
 class ImageAdapter @Inject constructor(): RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
@@ -38,7 +39,7 @@ class ImageAdapter @Inject constructor(): RecyclerView.Adapter<ImageAdapter.View
     inner class ViewHolder : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseStores.Result) {
             binding.apply {
-                cover.load(item.imageBackground)
+                cover.loadByFade(item.imageBackground)
                 title.text = item.name
             }
         }

@@ -6,4 +6,6 @@ import javax.inject.Inject
 class SearchRepository @Inject constructor(private val apiServices: ApiServices) {
     fun getAllStores() = apiServices.callAllStores()
     fun getAllGenres() = apiServices.callAllGenres()
+    fun searchGames(query: String) = apiServices.callSearchGames(searchQuery = query)
+    fun getGameDetails(gameId: String) = apiServices.callForGameDetails(gameId)
 }

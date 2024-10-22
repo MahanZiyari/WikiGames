@@ -83,6 +83,7 @@ data class ResponseGamesList(
         val metacritic: Int,
         @SerializedName("name")
         val name: String,
+        var description: String = "",
         @SerializedName("parent_platforms")
         val parentPlatforms: List<ParentPlatform>,
         @SerializedName("platforms")

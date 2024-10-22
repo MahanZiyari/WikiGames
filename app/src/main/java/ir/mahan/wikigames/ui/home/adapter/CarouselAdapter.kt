@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ir.mahan.wikigames.data.model.ResponseGamesList
 import ir.mahan.wikigames.databinding.ListBannerBinding
+import ir.mahan.wikigames.utils.loadByFade
 import javax.inject.Inject
 
 class CarouselAdapter @Inject constructor(): RecyclerView.Adapter<CarouselAdapter.ViewHolder>() {
@@ -34,7 +35,7 @@ class CarouselAdapter @Inject constructor(): RecyclerView.Adapter<CarouselAdapte
     inner class ViewHolder: RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseGamesList.Result) {
             binding.apply {
-                listItemImage.load(item.backgroundImage)
+                listItemImage.loadByFade(item.backgroundImage!!)
                 gameTitle.text = item.name
             }
         }

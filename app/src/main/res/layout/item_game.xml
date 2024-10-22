@@ -2,6 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="20dp"
+    android:background="@drawable/card_bg_rounded"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,6 +12,9 @@
         android:id="@+id/game_cover"
         android:layout_width="match_parent"
         android:layout_height="150dp"
+        android:scaleType="centerCrop"
+        android:padding="2dp"
+        app:shapeAppearanceOverlay="@style/RoundedImageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@color/RoyalOrange" />
@@ -80,6 +85,7 @@
                     android:background="@color/DarkGrayX11"
                     android:padding="5dp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="@id/game_title"
                     app:layout_constraintTop_toBottomOf="@id/game_summary"
                     tools:text="Shooter" />
@@ -103,6 +109,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/DarkGrayX11"
                     android:padding="5dp"
+                    android:textColor="@color/black"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="@id/game_title"
                     app:layout_constraintTop_toBottomOf="@id/game_summary"
@@ -121,15 +128,18 @@
 
             <ImageView
                 android:id="@+id/android_platform"
+                android:visibility="visible"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginEnd="2dp"
                 android:src="@drawable/round_android_24"
-                app:tint="?attr/colorPrimary" />
+                app:tint="?attr/colorSecondary" />
 
             <ImageView
                 android:id="@+id/apple_platform"
                 android:layout_width="30dp"
+                android:visibility="gone"
+
                 android:layout_height="30dp"
                 android:layout_marginHorizontal="2dp"
                 android:padding="5dp"
@@ -139,6 +149,8 @@
             <ImageView
                 android:id="@+id/ps_platform"
                 android:layout_width="30dp"
+                android:visibility="gone"
+
                 android:layout_height="30dp"
                 android:layout_marginHorizontal="2dp"
                 android:padding="5dp"
@@ -150,6 +162,8 @@
                 android:id="@+id/window_platform"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:visibility="gone"
+
                 android:layout_marginHorizontal="2dp"
                 android:padding="5dp"
 
@@ -160,6 +174,8 @@
                 android:id="@+id/xbox_platform"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:visibility="gone"
+
                 android:layout_marginHorizontal="2dp"
                 android:padding="5dp"
 
@@ -170,6 +186,8 @@
                 android:id="@+id/nintendo_platform"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:visibility="gone"
+
                 android:layout_marginStart="2dp"
                 android:padding="5dp"
                 android:src="@drawable/svgexport_nintedoswitch_logo"

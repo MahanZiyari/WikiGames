@@ -5,6 +5,8 @@ const val CONNECTION_TIMEOUT = 60L
 
 const val API_KEY = "38cff2adb7214f379bb21683b4854db2"
 
+const val DEBUG_TAG = "debug_tag"
+
 // Stores
 const val STEAM_IMAGE_URL = "https://cdn.akamai.steamstatic.com/store/home/store_home_share.jpg"
 
