@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
@@ -17,13 +19,16 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import ir.mahan.wikigames.data.model.ResponseGamesList
 import ir.mahan.wikigames.data.model.ResponseStores
 import ir.mahan.wikigames.databinding.FragmentSearchBinding
+import ir.mahan.wikigames.ui.games.GamesFragmentDirections
 import ir.mahan.wikigames.ui.search.adapter.GameItemAdapter
 import ir.mahan.wikigames.utils.DEBUG_TAG
 import ir.mahan.wikigames.utils.NINTENDO_IMAGE_URL
 import ir.mahan.wikigames.utils.PC_IMAGE_URL
 import ir.mahan.wikigames.utils.PLAYSTATION_IMAGE_URL
+import ir.mahan.wikigames.utils.Platform
 import ir.mahan.wikigames.utils.XBOX_IMAGE_URL
 import ir.mahan.wikigames.utils.checkForEmptiness
+import ir.mahan.wikigames.utils.loadByFade
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -42,9 +47,7 @@ class SearchFragment : Fragment(), SearchContracts.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //Call Api
-        presenter.getAllGenres()
-        presenter.getAllStores()
+
     }
 
 
@@ -60,6 +63,9 @@ class SearchFragment : Fragment(), SearchContracts.View {
     @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //Call Api
+        presenter.getAllGenres()
+        presenter.getAllStores()
 
         // Handling UI
         binding.apply {
@@ -76,6 +82,25 @@ class SearchFragment : Fragment(), SearchContracts.View {
                     changeSearchState(query)
                     presenter.searchInGames(query.toString())
                 }
+
+
+
+            genresAdapter.setOnItemClickListener {
+                val direction = GamesFragmentDirections.actionToGamesfragment(
+                    category = it.name,
+                    id = it.id
+                )
+                findNavController().navigate(direction)
+            }
+
+            storesAdapter.setOnItemClickListener {
+                val direction = GamesFragmentDirections.actionToGamesfragment(
+                    category = it.name,
+                    id = it.id
+                )
+                findNavController().navigate(direction)
+            }
+
         }
     }
 
@@ -92,15 +117,19 @@ class SearchFragment : Fragment(), SearchContracts.View {
 
     private fun FragmentSearchBinding.setPlatformCardsData() {
         setOnClickListenerForPlatforms()
-        psCard.load(PLAYSTATION_IMAGE_URL)
-        xboxCard.load(XBOX_IMAGE_URL)
-        pcCard.load(PC_IMAGE_URL)
-        nintendoCard.load(NINTENDO_IMAGE_URL)
+        psCard.loadByFade(PLAYSTATION_IMAGE_URL)
+        xboxCard.loadByFade(XBOX_IMAGE_URL)
+        pcCard.loadByFade(PC_IMAGE_URL)
+        nintendoCard.loadByFade(NINTENDO_IMAGE_URL)
     }
 
     private fun FragmentSearchBinding.setOnClickListenerForPlatforms() {
         psCard.setOnClickListener {
-            Snackbar.make(binding.root, "PlayStation Selected", Snackbar.LENGTH_LONG).show()
+            val direction = GamesFragmentDirections.actionToGamesfragment(
+                category = Platform.PLAYSTATION.name,
+                id = Platform.PLAYSTATION.id
+            )
+            findNavController().navigate(direction)
         }
         xboxCard.setOnClickListener {
             Snackbar.make(binding.root, "XBOX Selected", Snackbar.LENGTH_LONG).show()
@@ -114,10 +143,10 @@ class SearchFragment : Fragment(), SearchContracts.View {
     }
 
     override fun showStores(stores: List<ResponseStores.Result>) {
+        storesAdapter.setData(stores)
         binding.storesRecycler.apply {
-            storesAdapter.setData(stores)
-            adapter = storesAdapter
             layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+            adapter = storesAdapter
         }
     }
 
@@ -127,6 +156,8 @@ class SearchFragment : Fragment(), SearchContracts.View {
             adapter = genresAdapter
             layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         }
+
+
     }
 
     override fun showSearchResult(games: List<ResponseGamesList.Result>) {

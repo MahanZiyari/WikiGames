@@ -1,6 +1,7 @@
 package ir.mahan.wikigames.ui.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -33,5 +34,21 @@ class MainActivity : AppCompatActivity() {
         navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         // Bottom Navigation
         binding.bottomNav.setupWithNavController(navHostFragment.navController)
+        navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.gamesFragment -> {
+                    binding.bottomNav.visibility = View.GONE
+                }
+
+                else -> {
+                    binding.bottomNav.visibility = View.VISIBLE
+                }
+
+            }
+        }
+    }
+
+    override fun onNavigateUp(): Boolean {
+        return navHostFragment.navController.navigateUp() || super.onNavigateUp()
     }
 }

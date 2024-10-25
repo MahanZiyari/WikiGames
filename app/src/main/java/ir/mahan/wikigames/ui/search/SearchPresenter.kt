@@ -43,7 +43,7 @@ class SearchPresenter @Inject constructor(
                     //TODO: Hide Loading
                     val randomGenres = it.results.shuffled().take(6)
                     view.showGenres(randomGenres)
-                    Timber.tag("DEBUG").e("result: ${it.results}")
+                    //Timber.tag("DEBUG").e("result: ${it.results}")
                 }
             }, {
                 view.showGeneralError(it.message.toString())
@@ -85,7 +85,7 @@ class SearchPresenter @Inject constructor(
                 ) {
                     response.body()?.let { details ->
                         it.description = details.descriptionRaw
-                        Timber.e(it.description)
+                        //Timber.e(it.description)
                     }
                 }
 

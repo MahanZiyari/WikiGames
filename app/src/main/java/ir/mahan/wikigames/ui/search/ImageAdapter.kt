@@ -1,16 +1,14 @@
 package ir.mahan.wikigames.ui.search
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import ir.mahan.wikigames.data.model.ResponseGamesList
 import ir.mahan.wikigames.data.model.ResponseStores
-import ir.mahan.wikigames.databinding.ItemGamesSmallBinding
 import ir.mahan.wikigames.databinding.ItemImageBgBinding
-import ir.mahan.wikigames.ui.home.adapter.SmallItemGameAdapter
+import ir.mahan.wikigames.utils.debugLog
 import ir.mahan.wikigames.utils.loadByFade
 import javax.inject.Inject
 
@@ -40,7 +38,14 @@ class ImageAdapter @Inject constructor(): RecyclerView.Adapter<ImageAdapter.View
         fun bind(item: ResponseStores.Result) {
             binding.apply {
                 cover.loadByFade(item.imageBackground)
+                cover.setColorFilter(Color.argb(150, 0, 0, 0))
                 title.text = item.name
+
+                root.setOnClickListener { root ->
+                    onItemClickListener?.let {
+                        it(item)
+                    }
+                }
             }
         }
     }
@@ -48,6 +53,7 @@ class ImageAdapter @Inject constructor(): RecyclerView.Adapter<ImageAdapter.View
     private var onItemClickListener: ((ResponseStores.Result) -> Unit)? = null
 
     fun setOnItemClickListener(listener: (ResponseStores.Result) -> Unit) {
+        debugLog("Clicked")
         onItemClickListener = listener
     }
 
