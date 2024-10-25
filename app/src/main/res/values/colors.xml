@@ -12,4 +12,6 @@
     <color name="DarkGrayX11">#FFaaaaaa</color>
     <color name="SmokeWhite">#737070</color>
     <color name="someGray">#463D4145</color>
+    <color name="chineseBlack">#0e0f14</color>
+    <color name="chineseBlackAlpha">#C80E0F14</color>
 </resources>

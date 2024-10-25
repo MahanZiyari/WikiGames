@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.gamesFragment -> {
                     binding.bottomNav.visibility = View.GONE
                 }
+                R.id.detailsFragment -> binding.bottomNav.visibility = View.GONE
 
                 else -> {
                     binding.bottomNav.visibility = View.VISIBLE

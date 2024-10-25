@@ -1,4 +1,4 @@
-package ir.mahan.wikigames.ui.search
+package ir.mahan.wikigames.ui.search.adapter
 
 import android.content.Context
 import android.graphics.Color
@@ -25,7 +25,7 @@ class ImageAdapter @Inject constructor(): RecyclerView.Adapter<ImageAdapter.View
     }
 
 
-    override fun onBindViewHolder(holder: ImageAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //getItem from PagingDataAdapter
         holder.bind(games[position])
         //Not duplicate items
@@ -36,9 +36,10 @@ class ImageAdapter @Inject constructor(): RecyclerView.Adapter<ImageAdapter.View
 
     inner class ViewHolder : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseStores.Result) {
+            val shadowColorFilter = Color.argb(150, 0, 0, 0)
             binding.apply {
                 cover.loadByFade(item.imageBackground)
-                cover.setColorFilter(Color.argb(150, 0, 0, 0))
+                cover.setColorFilter(shadowColorFilter)
                 title.text = item.name
 
                 root.setOnClickListener { root ->

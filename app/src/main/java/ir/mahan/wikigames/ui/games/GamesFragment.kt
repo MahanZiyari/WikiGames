@@ -57,6 +57,12 @@ class GamesFragment : Fragment(), GamesContract.View {
             gamesToolbar.setNavigationOnClickListener {
                 findNavController().navigateUp()
             }
+
+            gameItemAdapter.setOnItemClickListener {
+                findNavController().navigate(
+                    GamesFragmentDirections.actionToDetailsfragment(it.id)
+                )
+            }
         }
     }
 

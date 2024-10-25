@@ -1,6 +1,7 @@
 package ir.mahan.wikigames.ui.home.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -34,9 +35,17 @@ class CarouselAdapter @Inject constructor(): RecyclerView.Adapter<CarouselAdapte
 
     inner class ViewHolder: RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseGamesList.Result) {
+            val shadowColorFilter = Color.argb(150, 0, 0, 0)
             binding.apply {
                 listItemImage.loadByFade(item.backgroundImage!!)
+                listItemImage.setColorFilter(shadowColorFilter)
                 gameTitle.text = item.name
+
+                root.setOnClickListener { root ->
+                    onItemClickListener?.let {
+                        it(item)
+                    }
+                }
             }
         }
     }

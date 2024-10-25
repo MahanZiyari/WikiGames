@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.details.DetailsFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/details_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <!--Cover layout-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!--Images-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/posterImagesLay"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                app:layout_constraintTop_toTopOf="parent">
+                <!--Big image-->
+                <ImageView
+                    android:id="@+id/posterBigImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.1"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/si_nds_newsupermariobrosds_image1600w" />
+                <!--Normal image-->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/posterNormalImg"
+                    android:layout_width="210dp"
+                    android:layout_height="300dp"
+                    android:scaleType="centerCrop"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearanceOverlay="@style/RoundedImageView"
+                    tools:src="@drawable/si_nds_newsupermariobrosds_image1600w" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--Back Fav-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/backImg"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/bg_rounded"
+                    android:padding="8dp"
+                    android:src="@drawable/round_arrow_back_24"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/favImg"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/bg_rounded"
+                    android:padding="8dp"
+                    android:src="@drawable/round_favorite_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/white" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--Info lay-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/infoLay"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/shadow"
+                android:paddingBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="@id/posterImagesLay">
+                <!--Title-->
+                <TextView
+                    android:id="@+id/gameNameTxt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    app:layout_constraintBottom_toTopOf="@id/otherInfoLay"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="Super Mario BROS" />
+                <!--Others info-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/otherInfoLay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent">
+                    <!--Rate-->
+                    <TextView
+                        android:id="@+id/gameRateTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="5dp"
+                        android:fontFamily="sans-serif-light"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        app:drawableStartCompat="@drawable/round_star_24"
+                        app:drawableTint="@color/white"
+                        app:layout_constraintEnd_toStartOf="@id/gameReleasedTxt"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="4.5" />
+                    <!--Date-->
+                    <TextView
+                        android:id="@+id/gameReleasedTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="5dp"
+                        android:fontFamily="sans-serif-light"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        app:drawableStartCompat="@drawable/round_calendar_month_24"
+                        app:drawableTint="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@id/gameRateTxt"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="10-10-2024" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--Summary-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/summaryLay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/infoLay">
+                <!--Title-->
+                <TextView
+                    android:id="@+id/gameSummaryTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/summary"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/round_info_24"
+                    app:drawableTint="?attr/colorOnBackground"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <!--Info-->
+                <TextView
+                    android:id="@+id/gameSummaryInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="sans-serif-light"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toBottomOf="@id/gameSummaryTitle"
+                    tools:text="@string/lorem_ipsum" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--ScreenShots-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/screenshots_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/summaryLay">
+
+                <!--Title-->
+                <TextView
+                    android:id="@+id/screenshotsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Screen Shots"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    app:drawableStartCompat="@drawable/round_photo_library_24"
+                    app:drawableTint="?attr/colorOnBackground"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <!--Info-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/screenshots_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:clipToPadding="false"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintTop_toBottomOf="@id/screenshotsTitle"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--Genres-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/genresLay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/screenshots_lay">
+                <!--Title-->
+                <TextView
+                    android:id="@+id/genresTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Genres"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    app:drawableStartCompat="@drawable/round_info_24"
+                    app:drawableTint="?attr/colorOnBackground"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <!--Info-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/genres_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:clipToPadding="false"
+                    android:layout_marginTop="5dp"
+                    tools:listitem="@layout/card_with_text_layout"
+                    app:layout_constraintTop_toBottomOf="@id/genresTitle"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/sim_games_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/genresLay">
+
+                <!--Title-->
+                <TextView
+                    android:id="@+id/suggestTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="More of this Franchiese"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    app:drawableStartCompat="@drawable/round_explore_24"
+                    app:drawableTint="?attr/colorOnBackground"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!--Info-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/suggest_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:clipToPadding="false"
+                    android:layout_marginTop="5dp"
+                    tools:listitem="@layout/item_image_bg"
+                    app:layout_constraintTop_toBottomOf="@id/suggestTitle"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout> <!--Cover layout-->
+
+
+    </androidx.core.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/loading_details"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

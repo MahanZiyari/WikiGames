@@ -1,5 +1,6 @@
 package ir.mahan.wikigames.utils
 
+
 const val BASE_URL = "https://api.rawg.io/api/"
 const val CONNECTION_TIMEOUT = 60L
 

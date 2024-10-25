@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
@@ -43,9 +44,6 @@ class HomeFragment : Fragment(), HomeContracts.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Call APIs
-        /*presenter.getLatestGames()
-        presenter.getBestGamesByMetacritic()
-        presenter.getBestOfShooter()*/
         presenter.getAllData()
         // Handling UI
 
@@ -76,6 +74,24 @@ class HomeFragment : Fragment(), HomeContracts.View {
                     LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = bestShooterAdapter
             }
+            // Click Listeners
+            val clickEvent: ((ResponseGamesList.Result) -> Unit) = {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToDetailsfragment(it.id)
+                )
+            }
+            bestGamesAdapter.setOnItemClickListener {
+                clickEvent(it)
+            }
+
+            bestShooterAdapter.setOnItemClickListener {
+                clickEvent(it)
+            }
+
+            bannerAdapter.setOnItemClickListener {
+                clickEvent(it)
+            }
+
         }
     }
 

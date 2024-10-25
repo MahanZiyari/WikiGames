@@ -45,6 +45,12 @@ class GameItemAdapter @Inject constructor(): RecyclerView.Adapter<GameItemAdapte
                 gameSummary.text = item.description
                 setGenreAndTag(item)
                 setPlatforms(item)
+
+                root.setOnClickListener { root ->
+                    onItemClickListener?.let {
+                        it(item)
+                    }
+                }
             }
         }
 

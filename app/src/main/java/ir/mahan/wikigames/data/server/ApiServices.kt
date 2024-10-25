@@ -3,6 +3,7 @@ package ir.mahan.wikigames.data.server
 import io.reactivex.rxjava3.core.Single
 import ir.mahan.wikigames.data.model.ResponseGameDetails
 import ir.mahan.wikigames.data.model.ResponseGamesList
+import ir.mahan.wikigames.data.model.ResponseScreenshots
 import ir.mahan.wikigames.data.model.ResponseStores
 import ir.mahan.wikigames.utils.API_KEY
 import retrofit2.Call
@@ -30,7 +31,7 @@ interface ApiServices {
     fun callForGamesByGenre(
         @Query("key") apiKey: String = API_KEY,
         @Query("genres") genre: String,
-        @Query("ordering") ordering: String,
+        @Query("ordering") ordering: String = "-metacritic",
         @Query("page") page: Int = 1
     ): Single<Response<ResponseGamesList>>
 
@@ -68,6 +69,26 @@ interface ApiServices {
         @Path("id") id : String,
         @Query("key") apiKey: String = API_KEY
     ): Call<ResponseGameDetails>
+
+    @GET("games/{id}")
+    fun observeGameDetails(
+        @Path("id") id : String,
+        @Query("key") apiKey: String = API_KEY
+    ): Single<Response<ResponseGameDetails>>
+
+    @GET("games/{id}/game-series")
+    fun callForSimilarGames(
+        @Path("id") id : String,
+        @Query("key") apiKey: String = API_KEY
+    ): Single<Response<ResponseGamesList>>
+
+    @GET("games/{id}/screenshots")
+    fun callForScreenshots(
+        @Path("id") id : String,
+        @Query("key") apiKey: String = API_KEY
+    ): Single<Response<ResponseScreenshots>>
+
+
 
     // Genres APIs
     @GET("genres")
