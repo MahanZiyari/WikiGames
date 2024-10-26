@@ -64,11 +64,6 @@ interface ApiServices {
         @Query("page") page: Int = 1
     ): Single<Response<ResponseGamesList>>
 
-    @GET("games/{id}")
-    fun callForGameDetails(
-        @Path("id") id : String,
-        @Query("key") apiKey: String = API_KEY
-    ): Call<ResponseGameDetails>
 
     @GET("games/{id}")
     fun observeGameDetails(

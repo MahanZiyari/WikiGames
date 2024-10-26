@@ -7,5 +7,5 @@ class GamesRepository @Inject constructor(private val apiServices: ApiServices) 
     fun getGamesByGenre(genreId: String) = apiServices.callForGamesByGenre(genre = genreId)
     fun getGamesByPlatform(platformId: String) = apiServices.callForGamesByPlatform(parentPlatform = platformId)
     fun getGamesByStore(storeId: String) = apiServices.callForStoresGames(store = storeId)
-    fun getGameDetails(gameId: String) = apiServices.callForGameDetails(gameId)
+    fun getGameDetailsRX(gameId: String) = apiServices.observeGameDetails(gameId)
 }

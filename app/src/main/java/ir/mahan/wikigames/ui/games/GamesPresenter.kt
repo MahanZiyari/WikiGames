@@ -1,6 +1,9 @@
 package ir.mahan.wikigames.ui.games
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.internal.operators.observable.ObservableFromIterable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ir.mahan.wikigames.base.BasePresenterImpl
 import ir.mahan.wikigames.data.model.ResponseGameDetails
@@ -16,6 +19,8 @@ class GamesPresenter @Inject constructor(
     private val repository: GamesRepository,
     private val view: GamesContract.View
 ) : GamesContract.Presenter, BasePresenterImpl() {
+
+    private var games = mutableListOf<ResponseGamesList.Result>()
 
     override fun getRequestedGames(category: String, categoryId: Int) {
         when(category) {
@@ -33,34 +38,62 @@ class GamesPresenter @Inject constructor(
 
     private fun getGamesByGenres(genreId: Int) {
         view.handleLoadingState(true)
-
-        disposable = repository
-            .getGamesByGenre(genreId.toString())
+        disposable = repository.getGamesByGenre(genreId.toString())
+            .flatMapObservable { gamesResponse ->
+                gamesResponse.body()?.let {
+                    games = it.results.toMutableList()
+                }
+                Observable.fromIterable(games)
+            }
+            .concatMap { game ->
+                repository.getGameDetailsRX(game.id.toString())
+                    .flatMap { detailsResponse ->
+                        detailsResponse.body()?.let {
+                            val details = it
+                            game.description = details?.descriptionRaw ?: "No description available"
+                        }
+                        Single.just(game) // Emit the updated game
+                    }
+                    .toObservable()
+            }
+            .toList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                it.body()?.let {
-                    view.handleLoadingState(false)
-                    view.showRequestedGames(appendSummaryToGames(it.results))
-                }
+                view.handleLoadingState(false)
+                view.showRequestedGames(it)
             }, {
                 view.showGeneralError(it.message.toString())
             })
     }
 
+
     private fun getGamesByPlatform(platformId: Int) {
         view.handleLoadingState(true)
-
-        disposable = repository
-            .getGamesByPlatform(platformId.toString())
+        disposable = repository.getGamesByPlatform(platformId.toString())
+            .flatMapObservable { gamesResponse ->
+                gamesResponse.body()?.let {
+                    games = it.results.toMutableList()
+                }
+                Observable.fromIterable(games)
+            }
+            .concatMap { game ->
+                repository.getGameDetailsRX(game.id.toString())
+                    .flatMap { detailsResponse ->
+                        detailsResponse.body()?.let {
+                            val details = it
+                            game.description = details?.descriptionRaw ?: "No description available"
+                        }
+                        Single.just(game) // Emit the updated game
+                    }
+                    .toObservable()
+            }
+            .toList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                it.body()?.let {
-                    view.handleLoadingState(false)
-                    debugLog("platforms games: ${it.results.size}")
-                    view.showRequestedGames(appendSummaryToGames(it.results))
-                }
+                view.handleLoadingState(false)
+                view.showRequestedGames(it)
             }, {
                 view.showGeneralError(it.message.toString())
             })
@@ -68,47 +101,35 @@ class GamesPresenter @Inject constructor(
 
     private fun getGamesByStore(storeId: Int) {
         view.handleLoadingState(true)
-        disposable = repository
-            .getGamesByStore(storeId.toString())
+        disposable = repository.getGamesByStore(storeId.toString())
+            .flatMapObservable { gamesResponse ->
+                gamesResponse.body()?.let {
+                    games = it.results.toMutableList()
+                }
+                Observable.fromIterable(games)
+            }
+            .concatMap { game ->
+                repository.getGameDetailsRX(game.id.toString())
+                    .flatMap { detailsResponse ->
+                        detailsResponse.body()?.let {
+                            val details = it
+                            game.description = details?.descriptionRaw ?: "No description available"
+                        }
+                        Single.just(game) // Emit the updated game
+                    }
+                    .toObservable()
+            }
+            .toList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                it.body()?.let {
-                    view.handleLoadingState(false)
-                    view.showRequestedGames(appendSummaryToGames(it.results))
-                }
+                view.handleLoadingState(false)
+                view.showRequestedGames(it)
             }, {
                 view.showGeneralError(it.message.toString())
             })
     }
 
-    private fun appendSummaryToGames(games: List<ResponseGamesList.Result>): List<ResponseGamesList.Result> {
-        val changedGames: MutableList<ResponseGamesList.Result> = games.toMutableList()
-
-        changedGames
-            .forEach {
-                val call = repository.getGameDetails(it.id.toString())
-
-                call.enqueue(object : retrofit2.Callback<ResponseGameDetails> {
-                    override fun onResponse(
-                        call: Call<ResponseGameDetails>,
-                        response: Response<ResponseGameDetails>
-                    ) {
-                        response.body()?.let { details ->
-                            it.description = details.descriptionRaw
-                            Timber.e(it.description)
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ResponseGameDetails>, error: Throwable) {
-                        view.showGeneralError(error.message.toString())
-                    }
-
-                })
-            }
-
-        return changedGames
-    }
 
 
 }
