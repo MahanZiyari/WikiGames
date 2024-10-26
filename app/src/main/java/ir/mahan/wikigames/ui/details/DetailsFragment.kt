@@ -16,7 +16,10 @@ import ir.mahan.wikigames.data.model.ResponseGameDetails
 import ir.mahan.wikigames.data.model.ResponseGamesList
 import ir.mahan.wikigames.data.model.ResponseScreenshots
 import ir.mahan.wikigames.databinding.FragmentDetailsBinding
-import ir.mahan.wikigames.ui.search.adapter.ImageAdapter
+import ir.mahan.wikigames.ui.details.adapters.CardTextAdapter
+import ir.mahan.wikigames.ui.details.adapters.ImageAdapter
+import ir.mahan.wikigames.ui.home.adapter.SmallItemGameAdapter
+import ir.mahan.wikigames.ui.search.adapter.GeneralItemAdapter
 import ir.mahan.wikigames.utils.loadByFade
 import javax.inject.Inject
 
@@ -32,7 +35,8 @@ class DetailsFragment : Fragment(), DetailsContract.View {
     @Inject
     lateinit var presenter: DetailsPresenter
     @Inject lateinit var genresAdapter: CardTextAdapter
-    @Inject lateinit var franchiseAdapter: ImageAdapter
+    @Inject lateinit var franchiseAdapter: SmallItemGameAdapter
+    @Inject lateinit var shotsAdapter: ImageAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,10 +53,28 @@ class DetailsFragment : Fragment(), DetailsContract.View {
         presenter.getDetailsForGame(gameId)
         // Handle UI
         binding.apply {
-            simGamesLay.visibility = View.GONE
             genresRecycler.apply {
                 adapter = genresAdapter
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            }
+            screenshotsRecycler.apply {
+                adapter = shotsAdapter
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            }
+            suggestRecycler.apply {
+                adapter = franchiseAdapter
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            }
+            // Adapters OnClick
+            franchiseAdapter.setOnItemClickListener {
+                findNavController().navigate(
+                    DetailsFragmentDirections.actionToDetailsfragment(it.id)
+                )
+            }
+            genresAdapter.setOnItemClickListener {
+                findNavController().navigate(
+                    DetailsFragmentDirections.actionToGamesfragment(it.name, it.id)
+                )
             }
             // back Icon
             backImg.setOnClickListener {
@@ -88,7 +110,8 @@ class DetailsFragment : Fragment(), DetailsContract.View {
             gameReleasedTxt.text = details.released
             gameSummaryInfo.text = details.descriptionRaw
         }
-
+        franchiseAdapter.setData(franchise)
+        shotsAdapter.setData(screenshots)
         genresAdapter.setData(details.genres)
     }
 

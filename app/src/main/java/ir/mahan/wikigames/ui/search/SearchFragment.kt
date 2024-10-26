@@ -19,7 +19,7 @@ import ir.mahan.wikigames.data.model.ResponseStores
 import ir.mahan.wikigames.databinding.FragmentSearchBinding
 import ir.mahan.wikigames.ui.games.GamesFragmentDirections
 import ir.mahan.wikigames.ui.search.adapter.GameItemAdapter
-import ir.mahan.wikigames.ui.search.adapter.ImageAdapter
+import ir.mahan.wikigames.ui.search.adapter.GeneralItemAdapter
 import ir.mahan.wikigames.utils.DEBUG_TAG
 import ir.mahan.wikigames.utils.NINTENDO_IMAGE_URL
 import ir.mahan.wikigames.utils.PC_IMAGE_URL
@@ -40,8 +40,8 @@ class SearchFragment : Fragment(), SearchContracts.View {
     private lateinit var binding: FragmentSearchBinding
 
     @Inject lateinit var presenter: SearchPresenter
-    @Inject lateinit var storesAdapter: ImageAdapter
-    @Inject lateinit var genresAdapter: ImageAdapter
+    @Inject lateinit var storesAdapter: GeneralItemAdapter
+    @Inject lateinit var genresAdapter: GeneralItemAdapter
     @Inject lateinit var gameItemAdapter: GameItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
