@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import ir.mahan.wikigames.ui.details.DetailsContract
+import ir.mahan.wikigames.ui.favorites.FavoritesContracts
 import ir.mahan.wikigames.ui.games.GamesContract
 import ir.mahan.wikigames.ui.home.HomeContracts
 import ir.mahan.wikigames.ui.search.SearchContracts
@@ -29,5 +30,9 @@ object ContractsModule {
     @Provides
     fun provideGDetailsContracts(fragment: Fragment): DetailsContract.View =
         fragment as DetailsContract.View
+
+    @Provides
+    fun provideGFavoritesContracts(fragment: Fragment): FavoritesContracts.View =
+        fragment as FavoritesContracts.View
 
 }

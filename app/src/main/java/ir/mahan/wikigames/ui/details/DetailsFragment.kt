@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import ir.mahan.wikigames.R
+import ir.mahan.wikigames.data.model.GameEntity
 import ir.mahan.wikigames.data.model.ResponseGameDetails
 import ir.mahan.wikigames.data.model.ResponseGamesList
 import ir.mahan.wikigames.data.model.ResponseScreenshots
@@ -37,6 +39,8 @@ class DetailsFragment : Fragment(), DetailsContract.View {
     @Inject lateinit var genresAdapter: CardTextAdapter
     @Inject lateinit var franchiseAdapter: SmallItemGameAdapter
     @Inject lateinit var shotsAdapter: ImageAdapter
+    @Inject
+    lateinit var entity: GameEntity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,43 +54,43 @@ class DetailsFragment : Fragment(), DetailsContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         gameId = args.gameId
-        presenter.getDetailsForGame(gameId)
+        presenter.getGameDetailsFromAPI(gameId)
         // Handle UI
         binding.apply {
+            // Genres Config
             genresRecycler.apply {
-                adapter = genresAdapter
+                adapter = genresAdapter.also {
+                    it.setOnItemClickListener {
+                        findNavController().navigate(
+                            DetailsFragmentDirections.actionToGamesfragment(
+                                title = it.name,
+                                id = it.id,
+                                category = QueryParam.GENRES.name
+                            )
+                        )
+                    }
+                }
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             }
+            // ScreenShots
             screenshotsRecycler.apply {
                 adapter = shotsAdapter
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             }
+            // franchise
             suggestRecycler.apply {
-                adapter = franchiseAdapter
+                adapter = franchiseAdapter.also {
+                    it.setOnItemClickListener {
+                        findNavController().navigate(
+                            DetailsFragmentDirections.actionToDetailsfragment(it.id)
+                        )
+                    }
+                }
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            }
-            // Adapters OnClick
-            franchiseAdapter.setOnItemClickListener {
-                findNavController().navigate(
-                    DetailsFragmentDirections.actionToDetailsfragment(it.id)
-                )
-            }
-            genresAdapter.setOnItemClickListener {
-                findNavController().navigate(
-                    DetailsFragmentDirections.actionToGamesfragment(
-                        title = it.name,
-                        id = it.id,
-                        category = QueryParam.GENRES.name
-                    )
-                )
             }
             // back Icon
             backImg.setOnClickListener {
                 findNavController().navigateUp()
-            }
-            // Add to favorites
-            favImg.setOnClickListener {
-                Toast.makeText(requireContext(), "favorites", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -113,10 +117,41 @@ class DetailsFragment : Fragment(), DetailsContract.View {
             gameRateTxt.text = details.rating.toString()
             gameReleasedTxt.text = details.released
             gameSummaryInfo.text = details.descriptionRaw
+
+            fillEntityFields(details)
+            presenter.checkForFavorite(details.id)
         }
         franchiseAdapter.setData(franchise)
         shotsAdapter.setData(screenshots)
         genresAdapter.setData(details.genres)
+    }
+
+    private fun fillEntityFields(details: ResponseGameDetails) {
+        entity.id = details.id
+        entity.title = details.name
+        entity.description = details.descriptionRaw
+        entity.backgroundimage = details.backgroundImage
+        entity.meta = details.metacritic.toString()
+        entity.genres = details.genres.map { it.name }
+    }
+
+    override fun setFavoriteState(isAdded: Boolean) {
+        binding.apply {
+            //Click
+            favImg.setOnClickListener {
+                if (isAdded) {
+                    presenter.removeGameFromFavorites(entity)
+                } else {
+                    presenter.addGameToFavorites(entity)
+                }
+            }
+            //Change color
+            if (isAdded) {
+                favImg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.TigersEye))
+            } else {
+                favImg.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white))
+            }
+        }
     }
 
     override fun showGeneralError(message: String) {

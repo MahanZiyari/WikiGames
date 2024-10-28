@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="4dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/img_cover"
+        tools:src="@drawable/si_nds_newsupermariobrosds_image1600w"
+        android:scaleType="centerCrop"
+        android:layout_width="100dp"
+        android:layout_height="120dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/txt_title"
+        tools:text="Grand theft Auto 5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnBackground"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="6dp"
+        app:layout_constraintTop_toTopOf="@id/img_cover"
+        app:layout_constraintStart_toEndOf="@id/img_cover"/>
+
+    <TextView
+        android:id="@+id/txt_desc"
+        tools:text="@string/lorem_ipsum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="?attr/colorOnBackground"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/txt_title"
+        app:layout_constraintStart_toStartOf="@id/txt_title"/>
+
+    <include
+        android:id="@+id/genre_card"
+        layout="@layout/card_with_text_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/txt_desc"/>
+
+
+    <TextView
+        android:id="@+id/txt_meta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Meta"
+        android:padding="4dp"
+        android:textSize="12sp"
+        android:textColor="?attr/colorOnBackground"
+        android:background="@drawable/outline_rounded_bg"
+        app:layout_constraintTop_toTopOf="@id/genre_card"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/genre_card"
+        app:layout_constraintStart_toEndOf="@id/genre_card"/>
+
+    <TextView
+        android:id="@+id/txt_meta_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="87"
+        android:textStyle="bold"
+        android:padding="4dp"
+        android:textSize="16sp"
+        android:textColor="?attr/colorOnBackground"
+        app:layout_constraintTop_toTopOf="@id/genre_card"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/genre_card"
+        app:layout_constraintStart_toEndOf="@id/txt_meta"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintStart_toEndOf="@id/img_cover"
+        app:layout_constraintTop_toBottomOf="@id/img_cover"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

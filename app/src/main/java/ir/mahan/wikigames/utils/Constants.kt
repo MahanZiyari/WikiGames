@@ -4,6 +4,9 @@ package ir.mahan.wikigames.utils
 const val BASE_URL = "https://api.rawg.io/api/"
 const val CONNECTION_TIMEOUT = 60L
 
+const val GAME_DATABASE = "game_database"
+const val GAMES_TABLE = "games_table"
+
 const val API_KEY = "38cff2adb7214f379bb21683b4854db2"
 
 const val DEBUG_TAG = "FUCK!!!"
