@@ -19,7 +19,7 @@ import ir.mahan.wikigames.databinding.FragmentDetailsBinding
 import ir.mahan.wikigames.ui.details.adapters.CardTextAdapter
 import ir.mahan.wikigames.ui.details.adapters.ImageAdapter
 import ir.mahan.wikigames.ui.home.adapter.SmallItemGameAdapter
-import ir.mahan.wikigames.ui.search.adapter.GeneralItemAdapter
+import ir.mahan.wikigames.utils.QueryParam
 import ir.mahan.wikigames.utils.loadByFade
 import javax.inject.Inject
 
@@ -73,7 +73,11 @@ class DetailsFragment : Fragment(), DetailsContract.View {
             }
             genresAdapter.setOnItemClickListener {
                 findNavController().navigate(
-                    DetailsFragmentDirections.actionToGamesfragment(it.name, it.id)
+                    DetailsFragmentDirections.actionToGamesfragment(
+                        title = it.name,
+                        id = it.id,
+                        category = QueryParam.GENRES.name
+                    )
                 )
             }
             // back Icon

@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -18,17 +21,19 @@ import ir.mahan.wikigames.data.model.ResponseGamesList
 import ir.mahan.wikigames.data.model.ResponseStores
 import ir.mahan.wikigames.databinding.FragmentSearchBinding
 import ir.mahan.wikigames.ui.games.GamesFragmentDirections
+import ir.mahan.wikigames.ui.games.PagingGamesAdapter
+import ir.mahan.wikigames.ui.games.adapter.LoadMoreAdapter
 import ir.mahan.wikigames.ui.search.adapter.GameItemAdapter
 import ir.mahan.wikigames.ui.search.adapter.GeneralItemAdapter
-import ir.mahan.wikigames.utils.DEBUG_TAG
 import ir.mahan.wikigames.utils.NINTENDO_IMAGE_URL
 import ir.mahan.wikigames.utils.PC_IMAGE_URL
 import ir.mahan.wikigames.utils.PLAYSTATION_IMAGE_URL
 import ir.mahan.wikigames.utils.Platform
+import ir.mahan.wikigames.utils.QueryParam
 import ir.mahan.wikigames.utils.XBOX_IMAGE_URL
 import ir.mahan.wikigames.utils.checkForEmptiness
 import ir.mahan.wikigames.utils.loadByFade
-import timber.log.Timber
+import kotlinx.coroutines.rx3.asFlowable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -42,12 +47,7 @@ class SearchFragment : Fragment(), SearchContracts.View {
     @Inject lateinit var presenter: SearchPresenter
     @Inject lateinit var storesAdapter: GeneralItemAdapter
     @Inject lateinit var genresAdapter: GeneralItemAdapter
-    @Inject lateinit var gameItemAdapter: GameItemAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    @Inject lateinit var gameItemAdapter: PagingGamesAdapter
 
 
     override fun onCreateView(
@@ -83,19 +83,34 @@ class SearchFragment : Fragment(), SearchContracts.View {
                 }
 
 
+            gameItemAdapter.apply {
+                setOnItemClickListener {
+                    val direction = GamesFragmentDirections.actionToDetailsfragment(it.id)
+                    findNavController().navigate(direction)
+                }
+
+                loadStateFlow
+                    .asFlowable()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        searchProgress.isVisible = it.refresh is LoadState.Loading
+                    }
+
+            }
 
             genresAdapter.setOnItemClickListener {
                 val direction = GamesFragmentDirections.actionToGamesfragment(
-                    category = it.name,
-                    id = it.id
+                    category = QueryParam.GENRES.name,
+                    id = it.id,
+                    title = it.name
                 )
                 findNavController().navigate(direction)
             }
-
             storesAdapter.setOnItemClickListener {
                 val direction = GamesFragmentDirections.actionToGamesfragment(
-                    category = it.name,
-                    id = it.id
+                    category = QueryParam.STORES.name,
+                    id = it.id,
+                    title = it.name
                 )
                 findNavController().navigate(direction)
             }
@@ -107,7 +122,6 @@ class SearchFragment : Fragment(), SearchContracts.View {
         if (query.toString().checkForEmptiness()) {
             contentSearchLayout.visibility = View.GONE
             searchResultLayout.visibility = View.VISIBLE
-            // call api by presenter
         } else {
             contentSearchLayout.visibility = View.VISIBLE
             searchResultLayout.visibility = View.GONE
@@ -125,19 +139,35 @@ class SearchFragment : Fragment(), SearchContracts.View {
     private fun FragmentSearchBinding.setOnClickListenerForPlatforms() {
         psCard.setOnClickListener {
             val direction = GamesFragmentDirections.actionToGamesfragment(
-                category = Platform.PLAYSTATION.name,
-                id = Platform.PLAYSTATION.id
+                category = QueryParam.PARENT_PLATFORMS.name,
+                id = Platform.PLAYSTATION.id,
+                title = Platform.PLAYSTATION.name
             )
             findNavController().navigate(direction)
         }
         xboxCard.setOnClickListener {
-            Snackbar.make(binding.root, "XBOX Selected", Snackbar.LENGTH_LONG).show()
+            val direction = GamesFragmentDirections.actionToGamesfragment(
+                category = QueryParam.PARENT_PLATFORMS.name,
+                id = Platform.XBOX.id,
+                title = Platform.XBOX.name
+            )
+            findNavController().navigate(direction)
         }
         pcCard.setOnClickListener {
-            Snackbar.make(binding.root, "PC Selected", Snackbar.LENGTH_LONG).show()
+            val direction = GamesFragmentDirections.actionToGamesfragment(
+                category = QueryParam.PARENT_PLATFORMS.name,
+                id = Platform.PC.id,
+                title = Platform.PC.name
+            )
+            findNavController().navigate(direction)
         }
         nintendoCard.setOnClickListener {
-            Snackbar.make(binding.root, "Nintendo Selected", Snackbar.LENGTH_LONG).show()
+            val direction = GamesFragmentDirections.actionToGamesfragment(
+                category = QueryParam.PARENT_PLATFORMS.name,
+                id = Platform.NINTENDO.id,
+                title = Platform.NINTENDO.name
+            )
+            findNavController().navigate(direction)
         }
     }
 
@@ -159,13 +189,15 @@ class SearchFragment : Fragment(), SearchContracts.View {
 
     }
 
-    override fun showSearchResult(games: List<ResponseGamesList.Result>) {
-        games.forEach {
-            Timber.tag(DEBUG_TAG).d("result: ${it.name} -> ${it.description}")
-        }
-        gameItemAdapter.setData(games)
+
+    override fun showSearchResultPaging(games: PagingData<ResponseGamesList.Result>) {
+        gameItemAdapter.submitData(lifecycle, games)
         binding.searchRecycler.apply {
-            adapter = gameItemAdapter
+            adapter = gameItemAdapter.withLoadStateFooter(
+                LoadMoreAdapter{
+                    gameItemAdapter.retry()
+                }
+            )
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
     }

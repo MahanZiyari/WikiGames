@@ -90,6 +90,12 @@ dependencies {
     implementation("net.danlew:android.joda:2.13.0")
     // Timber
     implementation("com.jakewharton.timber:timber:5.0.1")
-
+    // Material Components
     implementation("com.google.android.material:material:1.12.0")
+    // Paging 3
+    val paging_version = "3.3.2"
+    implementation("androidx.paging:paging-runtime:$paging_version")
+    // optional - RxJava3 support
+    implementation("androidx.paging:paging-rxjava3:$paging_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.7.3")
 }

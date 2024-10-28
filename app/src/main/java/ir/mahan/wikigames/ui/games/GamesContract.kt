@@ -1,5 +1,6 @@
 package ir.mahan.wikigames.ui.games
 
+import androidx.paging.PagingData
 import ir.mahan.wikigames.base.BaseView
 import ir.mahan.wikigames.base.Basepresenter
 import ir.mahan.wikigames.data.model.ResponseGamesList
@@ -8,7 +9,7 @@ interface GamesContract {
 
     interface View: BaseView {
         fun handleLoadingState(isShown: Boolean)
-        fun showRequestedGames(games: List<ResponseGamesList.Result>)
+        fun loadGamesByPaging(games: PagingData<ResponseGamesList.Result>)
     }
 
     interface Presenter: Basepresenter {

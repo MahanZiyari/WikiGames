@@ -1,18 +1,12 @@
 package ir.mahan.wikigames.ui.games
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.rxjava3.flowable
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.internal.operators.observable.ObservableFromIterable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import ir.mahan.wikigames.base.BasePresenterImpl
-import ir.mahan.wikigames.data.model.ResponseGameDetails
-import ir.mahan.wikigames.data.model.ResponseGamesList
+import ir.mahan.wikigames.data.GamesPagingSource
 import ir.mahan.wikigames.data.repository.GamesRepository
-import ir.mahan.wikigames.utils.debugLog
-import retrofit2.Call
-import retrofit2.Response
-import timber.log.Timber
 import javax.inject.Inject
 
 class GamesPresenter @Inject constructor(
@@ -20,116 +14,30 @@ class GamesPresenter @Inject constructor(
     private val view: GamesContract.View
 ) : GamesContract.Presenter, BasePresenterImpl() {
 
-    private var games = mutableListOf<ResponseGamesList.Result>()
 
     override fun getRequestedGames(category: String, categoryId: Int) {
-        when(category) {
-            "genres" -> {
-                getGamesByGenres(categoryId)
-            }
-            "stores" -> {
-                getGamesByStore(categoryId)
-            }
-            else -> {
-                getGamesByPlatform(categoryId)
-            }
-        }
+        getGamesByPaging(category, categoryId.toString())
     }
 
-    private fun getGamesByGenres(genreId: Int) {
-        view.handleLoadingState(true)
-        disposable = repository.getGamesByGenre(genreId.toString())
-            .flatMapObservable { gamesResponse ->
-                gamesResponse.body()?.let {
-                    games = it.results.toMutableList()
-                }
-                Observable.fromIterable(games)
-            }
-            .concatMap { game ->
-                repository.getGameDetailsRX(game.id.toString())
-                    .flatMap { detailsResponse ->
-                        detailsResponse.body()?.let {
-                            val details = it
-                            game.description = details?.descriptionRaw ?: "No description available"
-                        }
-                        Single.just(game) // Emit the updated game
-                    }
-                    .toObservable()
-            }
-            .toList()
-            .subscribeOn(Schedulers.io())
+    private fun getGamesByPaging(type: String, typeID: String) {
+        disposable = Pager(
+            PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = true,
+                prefetchDistance = 5
+            )
+        ) {
+            GamesPagingSource(
+                repository = repository,
+                type = type,
+                typeID = typeID
+            )
+        }.flowable
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                view.handleLoadingState(false)
-                view.showRequestedGames(it)
-            }, {
-                view.showGeneralError(it.message.toString())
-            })
+            .subscribe {
+                view.loadGamesByPaging(it)
+            }
     }
-
-
-    private fun getGamesByPlatform(platformId: Int) {
-        view.handleLoadingState(true)
-        disposable = repository.getGamesByPlatform(platformId.toString())
-            .flatMapObservable { gamesResponse ->
-                gamesResponse.body()?.let {
-                    games = it.results.toMutableList()
-                }
-                Observable.fromIterable(games)
-            }
-            .concatMap { game ->
-                repository.getGameDetailsRX(game.id.toString())
-                    .flatMap { detailsResponse ->
-                        detailsResponse.body()?.let {
-                            val details = it
-                            game.description = details?.descriptionRaw ?: "No description available"
-                        }
-                        Single.just(game) // Emit the updated game
-                    }
-                    .toObservable()
-            }
-            .toList()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                view.handleLoadingState(false)
-                view.showRequestedGames(it)
-            }, {
-                view.showGeneralError(it.message.toString())
-            })
-    }
-
-    private fun getGamesByStore(storeId: Int) {
-        view.handleLoadingState(true)
-        disposable = repository.getGamesByStore(storeId.toString())
-            .flatMapObservable { gamesResponse ->
-                gamesResponse.body()?.let {
-                    games = it.results.toMutableList()
-                }
-                Observable.fromIterable(games)
-            }
-            .concatMap { game ->
-                repository.getGameDetailsRX(game.id.toString())
-                    .flatMap { detailsResponse ->
-                        detailsResponse.body()?.let {
-                            val details = it
-                            game.description = details?.descriptionRaw ?: "No description available"
-                        }
-                        Single.just(game) // Emit the updated game
-                    }
-                    .toObservable()
-            }
-            .toList()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                view.handleLoadingState(false)
-                view.showRequestedGames(it)
-            }, {
-                view.showGeneralError(it.message.toString())
-            })
-    }
-
 
 
 }

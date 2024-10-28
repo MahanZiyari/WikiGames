@@ -6,6 +6,7 @@ import ir.mahan.wikigames.data.model.ResponseGamesList
 import ir.mahan.wikigames.data.model.ResponseScreenshots
 import ir.mahan.wikigames.data.model.ResponseStores
 import ir.mahan.wikigames.utils.API_KEY
+import ir.mahan.wikigames.utils.Orderby
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
@@ -17,21 +18,21 @@ interface ApiServices {
     @GET("games")
     fun callGamesList(
         @Query("key") apiKey: String = API_KEY,
-        @Query("page") page: Int = 1
+        @Query("page") page: Int
     ): Single<Response<ResponseGamesList>>
 
     @GET("games")
     fun callSearchGames(
         @Query("key") apiKey: String = API_KEY,
         @Query("search") searchQuery: String,
-        @Query("page") page: Int = 1
+        @Query("page") page: Int
     ): Single<Response<ResponseGamesList>>
 
     @GET("games")
     fun callForGamesByGenre(
         @Query("key") apiKey: String = API_KEY,
         @Query("genres") genre: String,
-        @Query("ordering") ordering: String = "-metacritic",
+        @Query("ordering") ordering: String = Orderby.ADDEDDESCENDING.order,
         @Query("page") page: Int = 1
     ): Single<Response<ResponseGamesList>>
 
@@ -53,7 +54,7 @@ interface ApiServices {
     @GET("games")
     fun callForBestRatedGames(
         @Query("key") apiKey: String = API_KEY,
-        @Query("oredring") ordering: String = "-metacritic",
+        @Query("oredring") ordering: String = Orderby.RATINGDESCENDING.order,
         @Query("page") page: Int = 1
     ): Single<Response<ResponseGamesList>>
 

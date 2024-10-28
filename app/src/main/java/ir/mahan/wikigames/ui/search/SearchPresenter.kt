@@ -1,14 +1,14 @@
 package ir.mahan.wikigames.ui.search
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.rxjava3.flowable
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ir.mahan.wikigames.base.BasePresenterImpl
-import ir.mahan.wikigames.data.model.ResponseGameDetails
-import ir.mahan.wikigames.data.model.ResponseGamesList
+import ir.mahan.wikigames.data.GamesPagingSource
 import ir.mahan.wikigames.data.repository.SearchRepository
-import retrofit2.Call
-import retrofit2.Response
-import timber.log.Timber
+import ir.mahan.wikigames.utils.QueryParam
 import javax.inject.Inject
 
 class SearchPresenter @Inject constructor(
@@ -24,7 +24,6 @@ class SearchPresenter @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 it.body()?.let {
-                    //TODO: Hide Loading
                     val randomStores = it.results.shuffled().take(6)
                     view.showStores(randomStores)
                 }
@@ -40,10 +39,8 @@ class SearchPresenter @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 it.body()?.let {
-                    //TODO: Hide Loading
                     val randomGenres = it.results.shuffled().take(6)
                     view.showGenres(randomGenres)
-                    //Timber.tag("DEBUG").e("result: ${it.results}")
                 }
             }, {
                 view.showGeneralError(it.message.toString())
@@ -51,52 +48,24 @@ class SearchPresenter @Inject constructor(
     }
 
     override fun searchInGames(query: String) {
-        view.searchLoadingState(true)
-        disposable = repository.searchGames(query)
-            .subscribeOn(Schedulers.io())
+        disposable = Pager(
+            PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = true,
+                prefetchDistance = 5
+            )
+        ) {
+            GamesPagingSource(
+                repository = repository,
+                type = QueryParam.SEARCH.name,
+                typeID = query
+            )
+        }.flowable
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                it.body()?.let {
-                    // Getting Description
-                    view.searchLoadingState(false)
-//                    view.showSearchResult(it.results)
-                    appendSummaryToGames(it.results)
-                }
-            }, {
-                view.showGeneralError(it.message.toString())
-            })
-    }
-
-    private fun appendSummaryToGames(games: List<ResponseGamesList.Result>) {
-        val changedGames: MutableList<ResponseGamesList.Result> = games.toMutableList()
-
-        changedGames
-            .map {
-                it.description = ""
-                it
+            .subscribe {
+                view.showSearchResultPaging(it)
             }
-            .forEach {
-            val call = repository.getGameDetails(it.id.toString())
 
-            call.enqueue(object : retrofit2.Callback<ResponseGameDetails> {
-                override fun onResponse(
-                    call: Call<ResponseGameDetails>,
-                    response: Response<ResponseGameDetails>
-                ) {
-                    response.body()?.let { details ->
-                        it.description = details.descriptionRaw
-                        //Timber.e(it.description)
-                    }
-                }
-
-                override fun onFailure(call: Call<ResponseGameDetails>, error: Throwable) {
-                    view.showGeneralError(error.message.toString())
-                }
-
-            })
-        }
-
-        view.showSearchResult(changedGames)
     }
 
 
