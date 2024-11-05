@@ -16,73 +16,24 @@ class HomePresenter @Inject constructor(
 
     private val apiResult: MutableMap<Int, List<ResponseGamesList.Result>> = mutableMapOf()
 
-    override fun getLatestGames() {
-        view.setLoadingState(true)
-        disposable = repository
-            .getLatestGames(date = LocalDate.now().toString(), ordering = "released")
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                it.body()?.let {
-                    view.setLoadingState(false)
-                    view.showLatestGamesOnCarousel(filterGamesByBackGround(it.results))
-                }
-            }, {
-                view.showGeneralError(it.message.toString())
-            })
-    }
 
-    override fun getBestGamesByMetacritic() {
-        //TODO: Show Loading
-        disposable = repository
-            .getBestGamesByMetacritic()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                it.body()?.let {
-                    //TODO: Hide Loading
-                    view.showBestGamesByMetacritic(it.results)
-                }
-            }, {
-                view.showGeneralError(it.message.toString())
-            })
-    }
-
-    override fun getBestOfShooter() {
-        //TODO: Show Loading
-        disposable = repository
-            .getBestOfSpecificGenre("2", "-metacritic")
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                it.body()?.let {
-                    //TODO: Hide Loading
-                    view.showBestGamesShooter(it.results)
-                    Timber.tag("HomePresenter").i(it.results.first().name)
-                }
-            }, {
-                view.showGeneralError(it.message.toString())
-            })
-    }
-
-    override fun getAllData() {
+    override fun getHomeScreenData() {
         view.setLoadingState(true)
         disposable =
             repository.getLatestGames(date = LocalDate.now().toString(), ordering = "released")
                 .subscribeOn(Schedulers.io())
                 .cache()
                 .flatMap {
-                    it.body()?.let { apiResult.put(1, it.results.take(5)) }
+                    it.body()?.let { apiResult.put(1, filterGamesByBackGround(it.results)) }
                     repository.getBestGamesByMetacritic().cache()
                 }.flatMap {
                     it.body()?.let { apiResult.put(2, it.results) }
                     repository.getBestOfSpecificGenre("2", "-metacritic").cache()
                 }.map { it }
                 .observeOn(AndroidSchedulers.mainThread())
-                .cache()
                 .subscribe({ body ->
                     body.body()?.let { bestShooters ->
-                        apiResult.put(3, bestShooters.results)
+                        apiResult[3] = bestShooters.results
                         view.setLoadingState(false)
                         view.showAllData(apiResult)
                     }

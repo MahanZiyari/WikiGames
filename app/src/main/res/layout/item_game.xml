@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="20dp"
+    android:layout_margin="8dp"
     android:background="@drawable/card_bg_rounded"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -13,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:scaleType="centerCrop"
-        android:padding="2dp"
-        app:shapeAppearanceOverlay="@style/RoundedImageView"
+        app:shapeAppearanceOverlay="@style/TopRoundedImageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@color/RoyalOrange" />

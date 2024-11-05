@@ -37,8 +37,13 @@ class CarouselAdapter @Inject constructor(): RecyclerView.Adapter<CarouselAdapte
         fun bind(item: ResponseGamesList.Result) {
             val shadowColorFilter = Color.argb(150, 0, 0, 0)
             binding.apply {
-                listItemImage.loadByFade(item.backgroundImage!!)
-                listItemImage.setColorFilter(shadowColorFilter)
+                listItemImage.load(item.backgroundImage){
+                    crossfade(true)
+                    crossfade(500)
+                    placeholder(android.R.drawable.ic_menu_report_image)
+                    fallback(android.R.drawable.ic_menu_report_image)
+                }
+                //listItemImage.setColorFilter(shadowColorFilter)
                 gameTitle.text = item.name
 
                 root.setOnClickListener { root ->

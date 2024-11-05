@@ -15,9 +15,6 @@ interface HomeContracts {
     }
 
     interface Presenter: Basepresenter {
-        fun getLatestGames()
-        fun getBestGamesByMetacritic()
-        fun getBestOfShooter()
-        fun getAllData()
+        fun getHomeScreenData()
     }
 }

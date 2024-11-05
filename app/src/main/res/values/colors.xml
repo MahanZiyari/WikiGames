@@ -14,4 +14,8 @@
     <color name="someGray">#463D4145</color>
     <color name="chineseBlack">#0e0f14</color>
     <color name="chineseBlackAlpha">#C80E0F14</color>
+    <!--Material Colors-->
+    <color name="onSecondaryContainer">#412100</color>
+    <color name="secondaryContainer">#f6a24f</color>
+    <color name="onSurfaceVariant">#c3c6cf</color>
 </resources>

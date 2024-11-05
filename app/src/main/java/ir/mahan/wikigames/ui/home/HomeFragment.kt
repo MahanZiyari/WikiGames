@@ -44,13 +44,13 @@ class HomeFragment : Fragment(), HomeContracts.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Call APIs
-        presenter.getAllData()
+        presenter.getHomeScreenData()
         // Handling UI
 
     }
 
     override fun showAllData(data: Map<Int, List<ResponseGamesList.Result>>) {
-        bannerAdapter.setData(data.get(1)!!)
+        bannerAdapter.setData(data[1]!!)
         bestGamesAdapter.setData(data.get(2)!!)
         bestShooterAdapter.setData(data.get(3)!!)
         binding.apply {

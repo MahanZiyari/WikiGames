@@ -9,12 +9,20 @@
         <item name="android:colorBackground">@color/BalticSea</item>
         <item name="colorSurface">@color/Tuna</item>
         <item name="colorOnBackground">@color/DarkGrayX11</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainer</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariant</item>
+    </style>
+
+    <style name="TopRoundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">20dp</item>
+        <item name="cornerSizeTopLeft">20dp</item>
     </style>
 
     <style name="RoundedImageView">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopRight">10dp</item>
-        <item name="cornerSizeTopLeft">10dp</item>
+        <item name="cornerSize">20dp</item>
     </style>
 
 

@@ -76,7 +76,7 @@ class PagingGamesAdapter @Inject constructor() :
             } else {
                 gameGenre.visibility = View.GONE
             }
-            if (item.tags.isNotEmpty()) {
+            if (item.tags.isNullOrEmpty().not()) {
                 gameTag.text = item.tags.first().name
             } else {
                 gameTag.visibility = View.GONE

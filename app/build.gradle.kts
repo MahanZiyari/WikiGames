@@ -91,7 +91,7 @@ dependencies {
     // Timber
     implementation("com.jakewharton.timber:timber:5.0.1")
     // Material Components
-    implementation("com.google.android.material:material:1.12.0")
+    implementation("com.google.android.material:material:1.5.0")
     // Paging 3
     val paging_version = "3.3.2"
     implementation("androidx.paging:paging-runtime:$paging_version")

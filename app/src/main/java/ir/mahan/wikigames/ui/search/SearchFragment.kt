@@ -32,6 +32,7 @@ import ir.mahan.wikigames.utils.Platform
 import ir.mahan.wikigames.utils.QueryParam
 import ir.mahan.wikigames.utils.XBOX_IMAGE_URL
 import ir.mahan.wikigames.utils.checkForEmptiness
+import ir.mahan.wikigames.utils.debugLog
 import ir.mahan.wikigames.utils.loadByFade
 import kotlinx.coroutines.rx3.asFlowable
 import java.util.concurrent.TimeUnit
@@ -49,11 +50,14 @@ class SearchFragment : Fragment(), SearchContracts.View {
     @Inject lateinit var genresAdapter: GeneralItemAdapter
     @Inject lateinit var gameItemAdapter: PagingGamesAdapter
 
+    // Other
+    private var searchQuery = ""
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentSearchBinding.inflate(layoutInflater)
         return binding.root
@@ -62,15 +66,27 @@ class SearchFragment : Fragment(), SearchContracts.View {
     @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        debugLog("SearchFragment: onViewCreated")
         //Call Api
         presenter.getAllGenres()
         presenter.getAllStores()
 
+
         // Handling UI
         binding.apply {
+            changeSearchState(searchQuery)
             // Platforms
             setPlatformCardsData()
             // Search
+            //--------------------------------
+            binding.searchRecycler.apply {
+                adapter = gameItemAdapter.withLoadStateFooter(
+                    LoadMoreAdapter{
+                        gameItemAdapter.retry()
+                    }
+                )
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            }
             searchEdt
                 .textChanges()
                 .skipInitialValue()
@@ -78,8 +94,7 @@ class SearchFragment : Fragment(), SearchContracts.View {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { query ->
-                    changeSearchState(query)
-                    presenter.searchInGames(query.toString())
+                    handleTextChange(query)
                 }
 
 
@@ -88,6 +103,7 @@ class SearchFragment : Fragment(), SearchContracts.View {
                     val direction = GamesFragmentDirections.actionToDetailsfragment(it.id)
                     findNavController().navigate(direction)
                 }
+
 
                 loadStateFlow
                     .asFlowable()
@@ -118,7 +134,18 @@ class SearchFragment : Fragment(), SearchContracts.View {
         }
     }
 
+    private fun FragmentSearchBinding.handleTextChange(query: CharSequence) {
+        debugLog("TextChanges: $query")
+        if ((searchQuery == query.toString()).not()) {
+            presenter.searchInGames(query.toString())
+            searchQuery = query.toString()
+        }
+        //searchQuery = query.toString()
+        changeSearchState(searchQuery)
+    }
+
     private fun FragmentSearchBinding.changeSearchState(query: CharSequence) {
+        debugLog("changeSearchState Function: $query")
         if (query.toString().checkForEmptiness()) {
             contentSearchLayout.visibility = View.GONE
             searchResultLayout.visibility = View.VISIBLE
@@ -191,15 +218,9 @@ class SearchFragment : Fragment(), SearchContracts.View {
 
 
     override fun showSearchResultPaging(games: PagingData<ResponseGamesList.Result>) {
+        debugLog("View.showSearchResultPaging Called")
+        //gameItemAdapter.submitData(lifecycle,PagingData.empty())
         gameItemAdapter.submitData(lifecycle, games)
-        binding.searchRecycler.apply {
-            adapter = gameItemAdapter.withLoadStateFooter(
-                LoadMoreAdapter{
-                    gameItemAdapter.retry()
-                }
-            )
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        }
     }
 
     override fun searchLoadingState(isShown: Boolean) {

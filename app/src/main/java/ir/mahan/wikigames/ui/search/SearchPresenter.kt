@@ -9,6 +9,7 @@ import ir.mahan.wikigames.base.BasePresenterImpl
 import ir.mahan.wikigames.data.GamesPagingSource
 import ir.mahan.wikigames.data.repository.SearchRepository
 import ir.mahan.wikigames.utils.QueryParam
+import ir.mahan.wikigames.utils.debugLog
 import javax.inject.Inject
 
 class SearchPresenter @Inject constructor(
@@ -48,6 +49,7 @@ class SearchPresenter @Inject constructor(
     }
 
     override fun searchInGames(query: String) {
+        debugLog("Presenter: Search In Games by $query")
         disposable = Pager(
             PagingConfig(
                 pageSize = 20,
